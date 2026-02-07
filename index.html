@@ -650,6 +650,7 @@
 
         let noCount = 0;
         let yesSize = 1;
+        let noSize = 1;
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const messageEl = document.getElementById('message');
@@ -659,6 +660,7 @@
         function moveNoButton() {
             noCount++;
             yesSize += 0.2;
+            noSize *= 0.85;
             
             messageEl.textContent = messages[Math.min(noCount, messages.length - 1)];
             
@@ -668,6 +670,7 @@
             }
             
             yesBtn.style.transform = `scale(${yesSize})`;
+            noBtn.style.transform = `scale(${noSize})`;
 
             const maxX = window.innerWidth - 150;
             const maxY = window.innerHeight - 100;
