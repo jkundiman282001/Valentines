@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Date? ☕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e0dcd5 0%, #bcaaa4 100%);
+            --envelope-color: #5d4037;
+            --envelope-flap: #4e342e;
+            --envelope-inside: #3e2723;
+            --accent-color: #8d6e63;
+            --text-color: #3e2723;
+            --paper-color: #fdfbf7;
+            --shadow-soft: 0 10px 40px rgba(62, 39, 35, 0.15);
+            --shadow-hard: 0 15px 35px rgba(62, 39, 35, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-gradient);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating Background Beans */
+        .bg-bean {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            animation: floatBean 15s infinite linear;
+            z-index: -1;
+            filter: blur(1px);
+        }
+
+        @keyframes floatBean {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+
+        /* Stage 1: Premium Envelope */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.02) translateY(-5px);
+            filter: drop-shadow(0 25px 40px rgba(0,0,0,0.25));
+        }
+
+        .envelope-wrapper.clicked {
+            pointer-events: none;
+            animation: envelopeExit 1.2s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+        }
+        
+        @keyframes envelopeExit {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            100% { transform: scale(0.8) translateY(100vh); opacity: 0; }
+        }
+
+        .envelope-wrapper.clicked .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+            transition-delay: 0s;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background: var(--envelope-inside);
+            position: relative;
+            border-radius: 0 0 12px 12px;
+            overflow: visible;
+        }
+
+        /* Paper Texture Overlay */
+        .envelope::after, .envelope-flap::after, .envelope-pocket::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid var(--envelope-flap);
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid var(--envelope-color);
+            border-right: 150px solid var(--envelope-color);
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid var(--envelope-color);
+            border-radius: 0 0 12px 12px;
+            z-index: 4;
+        }
+        
+        .envelope-text {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 700;
+            z-index: 5;
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .wax-seal {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+            border: 3px solid #b8860b;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.4);
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .envelope-wrapper:hover .wax-seal {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.4);
+        }
+
+        /* Stage 2: Latte Art Animation */
+        .latte-stage {
+            display: none;
+            text-align: center;
+        }
+
+        .latte-stage.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInScale 1s ease forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .coffee-cup-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 30px;
+        }
+
+        .saucer {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .cup {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 100px;
+            background: #fff;
+            border-radius: 0 0 70px 70px;
+            z-index: 2;
+            box-shadow: inset -10px 0 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .cup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 50%;
+        }
+
+        .handle {
+            position: absolute;
+            top: 40px;
+            right: 5px;
+            width: 35px;
+            height: 50px;
+            border: 8px solid #fff;
+            border-radius: 0 20px 40px 0;
+            z-index: 1;
+        }
+
+        .coffee-liquid {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 20px;
+            background: #6f4e37;
+            border-radius: 50%;
+            z-index: 3;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .latte-art {
+            width: 60px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            position: relative;
+            top: 2px;
+            box-shadow: 0 0 15px 5px rgba(111, 78, 55, 0.5);
+        }
+
+        .latte-art::before, .latte-art::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border-radius: 50%;
+            top: -15px;
+        }
+
+        .latte-art::before { left: 0; }
+        .latte-art::after { right: 0; }
+
+        .steam {
+            position: absolute;
+            top: -40px;
+            width: 10px;
+            height: 30px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: rise 2s infinite ease-out;
+            opacity: 0;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scaleX(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-40px) scaleX(2); opacity: 0; }
+        }
+
+        .flower-message {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #4e342e;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+        }
+
+        /* Stage 3: Premium Letter */
+        .letter-stage { display: none; }
+        .letter-stage.active { display: block; animation: slideUp 0.8s ease forwards; }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .letter {
+            background: var(--paper-color);
+            padding: 50px;
+            border-radius: 4px;
+            box-shadow: var(--shadow-hard);
+            max-width: 550px;
+            text-align: center;
+            position: relative;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        .letter h2 {
+            color: var(--text-color);
+            margin-bottom: 25px;
+            font-size: 36px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .letter p {
+            color: #5d4037;
+            line-height: 1.9;
+            margin-bottom: 25px;
+            font-size: 19px;
+            font-weight: 400;
+        }
+
+        .letter-signature {
+            margin-top: 40px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            color: var(--accent-color);
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .letter-signature::after {
+            content: '❤️';
+            font-size: 24px;
+            position: absolute;
+            bottom: -10px;
+            right: 40%;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+        }
+
+        /* Stage 4: Glassmorphism Invitation */
+        .coffee-stage { display: none; }
+        .coffee-stage.active { display: block; animation: fadeIn 1s ease; }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: var(--shadow-hard);
+            padding: 60px 40px;
+            max-width: 550px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .coffee-icon-anim {
+            font-size: 80px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: #3e2723;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .btn {
+            font-family: 'Lato', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 45px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5d4037 0%, #3e2723 100%);
+            color: #fff3e0;
+            box-shadow: 0 10px 20px rgba(62, 39, 35, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(62, 39, 35, 0.4);
+            background: linear-gradient(135deg, #6d4c41 0%, #4e342e 100%);
+        }
+
+        .btn-secondary {
+            background: #d7ccc8;
+            color: #5d4037;
+            box-shadow: 0 5px 15px rgba(161, 136, 127, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #bcaaa4;
+            transform: translateY(-2px);
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 30px;
+            pointer-events: none;
+            animation: fall 3s linear forwards;
+            z-index: 100;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .envelope { width: 260px; height: 170px; }
+            .envelope-flap { border-left-width: 130px; border-right-width: 130px; border-top-width: 90px; }
+            .envelope-pocket { border-left-width: 130px; border-right-width: 130px; border-bottom-width: 90px; }
+            .container { padding: 40px 25px; }
+            h1 { font-size: 28px; }
+            .btn { width: 100%; margin-bottom: 10px; }
+            .buttons-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-bean" style="left: 10%; animation-duration: 12s;">☕</div>
+    <div class="bg-bean" style="left: 80%; animation-duration: 18s; animation-delay: 2s;">☕</div>
+    <div class="bg-bean" style="left: 40%; animation-duration: 15s; animation-delay: 5s;">☕</div>
+
+    <!-- Stage 1: Envelope -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-pocket"></div>
+            <div class="envelope-text">For You</div>
+            <div class="wax-seal">❤️</div>
+        </div>
+    </div>
+
+    <!-- Stage 2: Latte Art -->
+    <div class="latte-stage" id="latteStage">
+        <div class="coffee-cup-container">
+            <div class="steam" style="left: 30%; animation-delay: 0s;"></div>
+            <div class="steam" style="left: 50%; animation-delay: 0.5s;"></div>
+            <div class="steam" style="left: 70%; animation-delay: 1s;"></div>
+            <div class="handle"></div>
+            <div class="cup">
+                <div class="coffee-liquid">
+                    <div class="latte-art"></div>
+                </div>
+            </div>
+            <div class="saucer"></div>
+        </div>
+        <div class="flower-message">A special brew just for you...</div>
+        <button class="btn btn-primary" onclick="showLetter()">Open Letter →</button>
+    </div>
+
+    <!-- Stage 3: Letter -->
+    <div class="letter-stage" id="letterStage">
+        <div class="letter">
+            <h2>My Dearest,</h2>
+            <p>
+                Life is a lot like coffee—it's much better when shared with someone special.
+                I've been brewing up the courage to ask you something...
+            </p>
+            <p>
+                There's a question that's been on my mind, warming my heart like a fresh cup of espresso.
+            </p>
+            <div class="letter-signature">Always yours</div>
+            <button class="btn btn-primary" onclick="showCoffeeInvite()">Read More →</button>
+        </div>
+    </div>
+
+    <!-- Stage 4: Coffee Invitation -->
+    <div class="coffee-stage" id="coffeeStage">
+        <div class="container" id="mainScreen">
+            <div class="coffee-icon-anim">☕</div>
+            <h1 id="message">Would you like to grab coffee with me?</h1>
+            <p class="hint" id="hint" style="display: none;"></p>
+            
+            <div class="buttons-container">
+                <button id="yesBtn" class="btn btn-primary" onclick="handleYes()">Yes, I'd love to! 🤎</button>
+                <button id="noBtn" class="btn btn-secondary">No</button>
+            </div>
+
+            <p class="small-hint" id="smallHint" style="display: none;"></p>
+        </div>
+
+        <div class="container success-screen" id="successScreen" style="display: none;">
+            <div class="coffee-icon-anim">💖</div>
+            <h1>It's a Date! 🎉</h1>
+            <p style="font-size: 20px; color: #5d4037;">I'll brew up the plans!<br>Can't wait to see you.</p>
+            <div style="margin-top: 20px; font-size: 24px;">
+                ☕ + ❤️ = 😊
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stage 1: Envelope click
+        document.getElementById('envelopeWrapper').addEventListener('click', function() {
+            this.classList.add('clicked');
+            
+            setTimeout(() => {
+                this.style.display = 'none';
+                document.getElementById('latteStage').classList.add('active');
+            }, 1000);
+        });
+
+        // Stage 2: Show Letter
+        function showLetter() {
+            document.getElementById('latteStage').style.display = 'none';
+            document.getElementById('letterStage').classList.add('active');
+            // Slight background shift
+            document.body.style.background = 'linear-gradient(135deg, #d7ccc8 20%, #bcaaa4 100%)'; 
+        }
+
+        // Stage 3: Show Coffee Invite
+        function showCoffeeInvite() {
+            document.getElementById('letterStage').style.display = 'none';
+            document.getElementById('coffeeStage').classList.add('active');
+            // Lighten background for glassmorphism
+            document.body.style.background = 'linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%)'; 
+        }
+
+        // Coffee invitation game logic
+        const messages = [
+            "Would you like to grab coffee with me? ☕",
+            "Are you sure? It'll be fun! 🥺",
+            "Please? Just one cup? ☕",
+            "I know a really good spot! 🏪",
+            "The coffee's on me! 💰",
+            "I'll even get you a pastry! 🥐",
+            "Don't let my coffee get cold! ❄️",
+            "You're breaking my heart! �",
+            "I promise good vibes! ✨",
+            "Okay, I'm not taking no for an answer! �"
+        ];
+
+        let noCount = 0;
+        let yesSize = 1;
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const messageEl = document.getElementById('message');
+        const hintEl = document.getElementById('hint');
+        const smallHintEl = document.getElementById('smallHint');
+
+        function moveNoButton() {
+            noCount++;
+            yesSize += 0.2;
+            
+            messageEl.textContent = messages[Math.min(noCount, messages.length - 1)];
+            
+            if (noCount > 2) {
+                hintEl.textContent = 'The "No" button is playing hard to get...';
+                hintEl.style.display = 'block';
+            }
+            
+            yesBtn.style.transform = `scale(${yesSize})`;
+
+            const maxX = window.innerWidth - 150;
+            const maxY = window.innerHeight - 100;
+            
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        }
+
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        function handleYes() {
+            document.getElementById('mainScreen').style.display = 'none';
+            const successScreen = document.getElementById('successScreen');
+            successScreen.style.display = 'block';
+            successScreen.classList.add('active');
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const emojis = ['❤️', '☕', '🥐', '✨', '💖'];
+            
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
