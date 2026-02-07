@@ -672,11 +672,18 @@
             yesBtn.style.transform = `scale(${yesSize})`;
             noBtn.style.transform = `scale(${noSize})`;
 
-            const maxX = window.innerWidth - 150;
-            const maxY = window.innerHeight - 100;
+            // Get actual button dimensions to ensure it stays on screen
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnWidth = btnRect.width || 100; // Fallback width
+            const btnHeight = btnRect.height || 50; // Fallback height
             
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
+            // Calculate safe boundaries (viewport - button size - padding)
+            const padding = 20;
+            const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
+            const maxY = Math.max(0, window.innerHeight - btnHeight - padding);
+            
+            const newX = Math.random() * maxX + padding / 2;
+            const newY = Math.random() * maxY + padding / 2;
             
             noBtn.style.position = 'fixed';
             noBtn.style.left = newX + 'px';
