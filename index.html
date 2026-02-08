@@ -396,7 +396,16 @@
             line-height: 1.2;
         }
 
-        .btn {
+            /* Buttons Container */
+            .buttons-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+            }
+
+            .btn {
             font-family: 'Lato', sans-serif;
             font-size: 18px;
             font-weight: 700;
@@ -671,6 +680,16 @@
             }
             
             yesBtn.style.transform = `scale(${yesSize})`;
+            
+            // Adjust spacing to prevent overlap
+            // Calculate the vertical growth (top and bottom)
+            const baseHeight = yesBtn.offsetHeight;
+            const growth = (baseHeight * yesSize) - baseHeight;
+            const verticalGrowth = growth / 2;
+            
+            // Add margin to push the "No" button down
+            // scaling grows both up and down, so we need to compensate for the bottom growth
+            yesBtn.style.marginBottom = `${verticalGrowth}px`;
             
             // Optional: Show hint after a few clicks
             if (noCount > 2) {
