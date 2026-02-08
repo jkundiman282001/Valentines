@@ -543,6 +543,30 @@
             pointer-events: none;
         }
 
+        /* Music Control Button */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+
         /* Small mobile devices */
         @media (max-width: 380px) {
             .envelope-wrapper {
@@ -563,6 +587,17 @@
     <div class="bg-bean" style="left: 10%; animation-duration: 12s;">☕</div>
     <div class="bg-bean" style="left: 80%; animation-duration: 18s; animation-delay: 2s;">☕</div>
     <div class="bg-bean" style="left: 40%; animation-duration: 15s; animation-delay: 5s;">☕</div>
+
+    <!-- Background Music -->
+    <!-- REPLACE 'music.mp3' WITH YOUR OWN MUSIC FILE -->
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="music-control" id="musicControl" style="display: none;">
+        🎵
+    </div>
 
     <!-- Stage 1: Envelope -->
     <div class="envelope-wrapper" id="envelopeWrapper">
@@ -634,10 +669,42 @@
     </div>
 
     <script>
+        // Music Logic
+        const music = document.getElementById('bgMusic');
+        const musicControl = document.getElementById('musicControl');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicControl.textContent = '🔇';
+                musicControl.style.opacity = '0.7';
+            } else {
+                music.play().then(() => {
+                    musicControl.textContent = '🎵';
+                    musicControl.style.opacity = '1';
+                }).catch(e => console.log("Audio play failed:", e));
+            }
+            isPlaying = !isPlaying;
+        }
+
+        musicControl.addEventListener('click', toggleMusic);
+
         // Stage 1: Envelope click
         document.getElementById('envelopeWrapper').addEventListener('click', function() {
             this.classList.add('clicked');
             
+            // Try to start music on first interaction
+            if (!isPlaying) {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicControl.style.display = 'flex'; // Show control once music starts
+                }).catch(e => {
+                    console.log("Auto-play blocked, showing control anyway");
+                    musicControl.style.display = 'flex';
+                });
+            }
+
             setTimeout(() => {
                 this.style.display = 'none';
                 document.getElementById('latteStage').classList.add('active');
