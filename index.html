@@ -678,12 +678,12 @@
             yesBtn.style.transform = `scale(${yesSize})`;
             noBtn.style.transform = `scale(${noSize})`;
 
-            // Get actual button dimensions to ensure it stays on screen
-            const btnRect = noBtn.getBoundingClientRect();
-            const btnWidth = btnRect.width || 100; // Fallback width
-            const btnHeight = btnRect.height || 50; // Fallback height
+            // Use offsetWidth/Height (unscaled dimensions) to ensure the layout box stays within viewport.
+            // Since the button shrinks (scale < 1), keeping the unscaled box inside guarantees visibility.
+            const btnWidth = noBtn.offsetWidth || 100; 
+            const btnHeight = noBtn.offsetHeight || 50;
             
-            // Calculate safe boundaries (viewport - button size - padding)
+            // Calculate safe boundaries with a generous padding
             const padding = 20;
             const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
             const maxY = Math.max(0, window.innerHeight - btnHeight - padding);
@@ -694,14 +694,14 @@
             noBtn.style.position = 'fixed';
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
+            noBtn.style.zIndex = '1000'; // Ensure it stays on top
         }
 
         // Add resize listener to keep "No" button on screen if window size changes
         window.addEventListener('resize', () => {
             if (noBtn.style.position === 'fixed') {
-                const btnRect = noBtn.getBoundingClientRect();
-                const btnWidth = btnRect.width || 100;
-                const btnHeight = btnRect.height || 50;
+                const btnWidth = noBtn.offsetWidth || 100;
+                const btnHeight = noBtn.offsetHeight || 50;
                 
                 const padding = 20;
                 const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
