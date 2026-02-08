@@ -659,7 +659,13 @@
 
         function moveNoButton() {
             noCount++;
-            yesSize += 0.2;
+            
+            // Limit "Yes" button growth to prevent it from covering everything on mobile
+            const maxScale = window.innerWidth < 600 ? 2.5 : 4;
+            if (yesSize < maxScale) {
+                yesSize += 0.2;
+            }
+            
             noSize *= 0.85;
             
             messageEl.textContent = messages[Math.min(noCount, messages.length - 1)];
@@ -689,6 +695,29 @@
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
         }
+
+        // Add resize listener to keep "No" button on screen if window size changes
+        window.addEventListener('resize', () => {
+            if (noBtn.style.position === 'fixed') {
+                const btnRect = noBtn.getBoundingClientRect();
+                const btnWidth = btnRect.width || 100;
+                const btnHeight = btnRect.height || 50;
+                
+                const padding = 20;
+                const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
+                const maxY = Math.max(0, window.innerHeight - btnHeight - padding);
+                
+                let currentLeft = parseFloat(noBtn.style.left) || 0;
+                let currentTop = parseFloat(noBtn.style.top) || 0;
+                
+                // Clamp position to new boundaries
+                currentLeft = Math.min(Math.max(padding/2, currentLeft), maxX + padding/2);
+                currentTop = Math.min(Math.max(padding/2, currentTop), maxY + padding/2);
+                
+                noBtn.style.left = currentLeft + 'px';
+                noBtn.style.top = currentTop + 'px';
+            }
+        });
 
         noBtn.addEventListener('mouseenter', moveNoButton);
         noBtn.addEventListener('click', (e) => {
