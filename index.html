@@ -526,6 +526,23 @@
             }
         }
 
+        /* Broken Button Animation */
+        @keyframes breakFall {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(20deg); }
+            40% { transform: rotate(-20deg); }
+            60% { transform: rotate(10deg); }
+            80% { transform: rotate(-10deg); }
+            100% { transform: translateY(150px) rotate(45deg); opacity: 0; pointer-events: none; }
+        }
+
+        .broken-btn {
+            animation: breakFall 1s ease forwards;
+            background-color: #5d4037 !important;
+            border: 2px dashed #3e2723 !important;
+            pointer-events: none;
+        }
+
         /* Small mobile devices */
         @media (max-width: 380px) {
             .envelope-wrapper {
@@ -670,6 +687,18 @@
         function handleNoClick() {
             noCount++;
             
+            // Check if button should break (after running out of messages)
+            if (noCount > noMessages.length) {
+                noBtn.textContent = "It's broken! 💔";
+                noBtn.classList.add('broken-btn');
+                
+                hintEl.textContent = "Oops! You broke the 'No' button... I guess you HAVE to say Yes now! 😉";
+                hintEl.style.display = 'block';
+                hintEl.style.color = '#d32f2f';
+                hintEl.style.fontWeight = 'bold';
+                return;
+            }
+
             // Cycle through messages on the button itself
             noBtn.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
             
