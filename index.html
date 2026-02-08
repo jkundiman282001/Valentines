@@ -635,99 +635,58 @@
         }
 
         // Coffee invitation game logic
-        const messages = [
-            "Would you like to grab coffee with me? ☕",
-            "Are you sure? It'll be fun! 🥺",
-            "Please? Just one cup? ☕",
-            "I know a really good spot! 🏪",
-            "The coffee's on me! 💰",
-            "I'll even get you a pastry! 🥐",
-            "Don't let my coffee get cold! ❄️",
-            "You're breaking my heart! �",
-            "I promise good vibes! ✨",
-            "Okay, I'm not taking no for an answer! �"
+        const noMessages = [
+            "No",
+            "Are you sure?",
+            "Are you really sure?",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You might regret this!",
+            "Have a heart!",
+            "Absolutely no?",
+            "This is sad...",
+            "Change of heart?",
+            "I'm not giving up!",
+            "Just click YES!"
         ];
 
         let noCount = 0;
         let yesSize = 1;
-        let noSize = 1;
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
-        const messageEl = document.getElementById('message');
         const hintEl = document.getElementById('hint');
         const smallHintEl = document.getElementById('smallHint');
 
-        function moveNoButton() {
+        function handleNoClick() {
             noCount++;
             
+            // Cycle through messages on the button itself
+            noBtn.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
+            
             // Limit "Yes" button growth to prevent it from covering everything on mobile
-            const maxScale = window.innerWidth < 600 ? 2.5 : 4;
+            const maxScale = window.innerWidth < 600 ? 3 : 5;
             if (yesSize < maxScale) {
-                yesSize += 0.2;
-            }
-            
-            noSize *= 0.85;
-            
-            messageEl.textContent = messages[Math.min(noCount, messages.length - 1)];
-            
-            if (noCount > 2) {
-                hintEl.textContent = 'The "No" button is playing hard to get...';
-                hintEl.style.display = 'block';
+                yesSize += 0.3;
             }
             
             yesBtn.style.transform = `scale(${yesSize})`;
-            noBtn.style.transform = `scale(${noSize})`;
-
-            // Use offsetWidth/Height (unscaled dimensions) to ensure the layout box stays within viewport.
-            // Since the button shrinks (scale < 1), keeping the unscaled box inside guarantees visibility.
-            const btnWidth = noBtn.offsetWidth || 100; 
-            const btnHeight = noBtn.offsetHeight || 50;
             
-            // Calculate safe boundaries with a generous padding
-            const padding = 20;
-            const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
-            const maxY = Math.max(0, window.innerHeight - btnHeight - padding);
-            
-            const newX = Math.random() * maxX + padding / 2;
-            const newY = Math.random() * maxY + padding / 2;
-            
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
-            noBtn.style.zIndex = '1000'; // Ensure it stays on top
+            // Optional: Show hint after a few clicks
+            if (noCount > 2) {
+                hintEl.textContent = 'The "Yes" button is getting irresistible...';
+                hintEl.style.display = 'block';
+            }
         }
 
-        // Add resize listener to keep "No" button on screen if window size changes
-        window.addEventListener('resize', () => {
-            if (noBtn.style.position === 'fixed') {
-                const btnWidth = noBtn.offsetWidth || 100;
-                const btnHeight = noBtn.offsetHeight || 50;
-                
-                const padding = 20;
-                const maxX = Math.max(0, window.innerWidth - btnWidth - padding);
-                const maxY = Math.max(0, window.innerHeight - btnHeight - padding);
-                
-                let currentLeft = parseFloat(noBtn.style.left) || 0;
-                let currentTop = parseFloat(noBtn.style.top) || 0;
-                
-                // Clamp position to new boundaries
-                currentLeft = Math.min(Math.max(padding/2, currentLeft), maxX + padding/2);
-                currentTop = Math.min(Math.max(padding/2, currentTop), maxY + padding/2);
-                
-                noBtn.style.left = currentLeft + 'px';
-                noBtn.style.top = currentTop + 'px';
-            }
-        });
-
-        noBtn.addEventListener('mouseenter', moveNoButton);
         noBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            moveNoButton();
+            handleNoClick();
         });
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveNoButton();
-        });
+        
+        // Remove touch/hover listeners that caused movement
+        // noBtn.addEventListener('mouseenter', ...); 
+        // noBtn.addEventListener('touchstart', ...);
 
         function handleYes() {
             document.getElementById('mainScreen').style.display = 'none';
