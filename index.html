@@ -604,6 +604,91 @@
                 font-size: 22px;
             }
         }
+
+        /* Success Screen Design Elevation */
+        .success-gif {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .details-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: left;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(85, 107, 47, 0.15);
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid rgba(85, 107, 47, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .details-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-color), var(--envelope-color));
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 18px;
+            color: #334418;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(85, 107, 47, 0.2);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .detail-icon {
+            font-size: 22px;
+            margin-right: 15px;
+            width: 42px;
+            height: 42px;
+            background: #f1f8e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #556b2f;
+            margin-bottom: 2px;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
     </style>
 </head>
 <body>
@@ -689,14 +774,36 @@
         </div>
 
         <div class="container success-screen" id="successScreen" style="display: none;">
-            <div class="coffee-icon-anim">💖</div>
+            <img src="Yay.gif" alt="Yay! I'm excited!" class="success-gif">
             <h1>Yay! I'm excited! 🎉</h1>
             <p style="font-size: 20px; color: #334418; margin-bottom: 25px;">I can't wait to see you!</p>
             
-            <div style="background: rgba(255,255,255,0.6); padding: 25px; border-radius: 15px; text-align: left; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 350px;">
-                <p style="margin: 10px 0; font-size: 18px;"><strong>📅 Date:</strong> February 25, 2026</p>
-                <p style="margin: 10px 0; font-size: 18px;"><strong>⏰ Time:</strong> 4:00 PM</p>
-                <p style="margin: 10px 0; font-size: 18px;"><strong>📍 Location:</strong> [Insert Location Here]</p>
+            <div class="details-card">
+                <div class="detail-item">
+                    <div class="detail-icon">📅</div>
+                    <div>
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">February 25, 2026</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">⏰</div>
+                    <div>
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">4:00 PM</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">�</div>
+                    <div>
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">The Tipsy Butter</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; font-size: 24px; animation: bounce 2s infinite;">
+                ☕ + ❤️ = 😊
             </div>
         </div>
     </div>
