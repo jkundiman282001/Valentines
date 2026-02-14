@@ -1100,6 +1100,10 @@
                     </div>
                 </div>
             </div>
+
+            <div style="margin-top: 30px; font-size: 24px; animation: bounce 2s infinite;">
+                ☕ + ❤️ = 😊
+            </div>
         </div>
     </div>
 
@@ -1249,14 +1253,6 @@
 
         function handleYes() {
             console.log("She said YES! 🎉"); // Log for testing
-            
-            // Automatic Email Trigger
-            const email = "japhetkundiman11@gmail.com"; // <--- CHANGE THIS TO YOUR EMAIL
-            const subject = "It's a Date!";
-            const body = "I said YES! See you on Feb 25th!";
-            
-            // This will open her email client with the message pre-filled
-            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
             document.getElementById('mainScreen').style.display = 'none';
             const successScreen = document.getElementById('successScreen');
