@@ -736,16 +736,14 @@
         function showLetter() {
             document.getElementById('latteStage').style.display = 'none';
             document.getElementById('letterStage').classList.add('active');
-            // Slight background shift
-            document.body.style.background = 'linear-gradient(135deg, #d7ccc8 20%, #bcaaa4 100%)'; 
+            // Background stays consistent
         }
 
         // Stage 3: Show Coffee Invite
         function showCoffeeInvite() {
             document.getElementById('letterStage').style.display = 'none';
             document.getElementById('coffeeStage').classList.add('active');
-            // Lighten background for glassmorphism
-            document.body.style.background = 'linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%)'; 
+            // Background stays consistent
         }
 
         // Coffee invitation game logic
