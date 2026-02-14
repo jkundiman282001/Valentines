@@ -1100,6 +1100,17 @@
                     </div>
                 </div>
             </div>
+
+            <div style="margin-top: 30px; font-size: 24px; animation: bounce 2s infinite;">
+                ☕ + ❤️ = 😊
+            </div>
+
+            <!-- Notify Button -->
+            <a href="mailto:your-email@example.com?subject=It's a Date!&body=I said YES! See you on Feb 25th!" 
+               class="btn btn-primary" 
+               style="margin-top: 20px; text-decoration: none; display: inline-block;">
+               Tell Japhet! 💌
+            </a>
         </div>
     </div>
 
@@ -1248,6 +1259,7 @@
         // noBtn.addEventListener('touchstart', ...);
 
         function handleYes() {
+            console.log("She said YES! 🎉"); // Log for testing
             document.getElementById('mainScreen').style.display = 'none';
             const successScreen = document.getElementById('successScreen');
             successScreen.style.display = 'block';
